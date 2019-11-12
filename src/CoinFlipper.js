@@ -49,22 +49,19 @@ class CoinFlipper extends Component {
   }
 
   render() {
-    console.log(this.state.headsCount)
-    console.log(this.state.tailsCount)
     return (
       <div className="CoinFlipper">
         <DisplayCoin 
-          heads={this.state.heads}
+          headsTails={this.state.heads}
+          heads={"https://upload.wikimedia.org/wikipedia/commons/c/cd/S_Half_Dollar_Obverse_2016.jpg"}
+          tails={"http://www.pcgscoinfacts.com/UserImages/71009269r.jpg"}
+
           />
-        <button onClick={this.handleClicks}>Flip Coin</button>
+        <button onClick={this.handleClicks}>Flip me!</button>
         <div>
           <h3>Out of {this.state.totalFlips} flips, there have been {this.state.headsCount} heads and {this.state.tailsCount} tails. </h3>
         </div>
      </div>
-
-      // EXAMPLE
-      // onClick={(event) => { func1(event); func2();}}
-
     )
   }
 }
