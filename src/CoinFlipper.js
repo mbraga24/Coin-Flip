@@ -1,66 +1,51 @@
 import React, { Component } from 'react'
-import DisplayCoin from "./DisplayCoin"
+import { randomSide } from "./helpers"
+import Coin from "./Coin"
 import "./CoinFlipper.css"
 
 class CoinFlipper extends Component {
   static defaultProps = {
-    coin: [
-      "heads",
-      "tails"
+    coins: [
+      {side: "heads", imgSrc: "https://upload.wikimedia.org/wikipedia/commons/c/cd/S_Half_Dollar_Obverse_2016.jpg" },
+      {side: "tails", imgSrc: "http://www.pcgscoinfacts.com/UserImages/71009269r.jpg" }
     ]
   }
   constructor(props) {
     super(props)
     this.state = {
       totalFlips: 0,
-      headsCount: 0,
-      tailsCount: 0,
-      heads: undefined
+      headFlips: 0,
+      tailFlips: 0,
+      coinFace: null
     }
 
-    this.handleClicks = this.handleClicks.bind(this)
+    this.handleClick = this.handleClick.bind(this)
   }
 
-  countFlips(currentState) {
-    return { totalFlips: currentState.totalFlips + 1 }
+  flipCoin() {
+    let newCoin = randomSide(this.props.coins)
+    this.setState(currentState => {
+      return {
+        coinFace: newCoin,
+        totalFlips: currentState.totalFlips + 1,
+        headFlips: currentState.headFlips + (newCoin.side === "heads" ? 1: 0),
+        tailFlips: currentState.tailFlips + (newCoin.side === "tails" ? 1: 0)
+      }
+    });
   }
 
-  pickHeadTails(currentState) {
-    let index = Math.floor(Math.random() * this.props.coin.length)
-    let coin = this.props.coin;
-    if (coin[index] === "heads") {
-      return { headsCount: currentState.headsCount + 1 , heads: true }
-    } else {
-      return { tailsCount: currentState.tailsCount + 1, heads: false }
-    }
-  }
-
-  startNewFlip() {
-    this.setState(this.countFlips)
-  }
-
-  startHeadTails() {
-    this.setState(this.pickHeadTails)
-  }
-
-  handleClicks(event) {
-    this.startNewFlip(event)
-    this.startHeadTails(event)
+  handleClick(e) {
+    this.flipCoin();
   }
 
   render() {
     return (
       <div className="CoinFlipper">
-        <DisplayCoin 
-          headsTails={this.state.heads}
-          heads={"https://upload.wikimedia.org/wikipedia/commons/c/cd/S_Half_Dollar_Obverse_2016.jpg"}
-          tails={"http://www.pcgscoinfacts.com/UserImages/71009269r.jpg"}
-
-          />
-        <button onClick={this.handleClicks}>Flip me!</button>
-        <div>
-          <h3>Out of {this.state.totalFlips} flips, there have been {this.state.headsCount} heads and {this.state.tailsCount} tails. </h3>
-        </div>
+        <h2>Let's flip a coin!</h2>
+        {this.state.coinFace && <Coin data={this.state.coinFace} />}
+        <p>Out of {this.state.totalFlips}, there have been {this.state.headFlips}{" "}
+        heads and {this.state.tailFlips} tails.</p>
+        <button onClick={this.handleClick}>Flip me!</button>
      </div>
     )
   }
